@@ -1,23 +1,12 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
+import { App } from 'aws-cdk-lib';
+import { MyStaticFargate } from './fargate';
 
-export class MyStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps = {}) {
-    super(scope, id, props);
-
-    // define resources here...
-  }
-}
-
-// for development, use account/region from cdk cli
-const devEnv = {
-  account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION,
+const janoschEnv = {
+  account: '630372269283',
+  region: 'eu-central-1',
 };
 
 const app = new App();
-
-new MyStack(app, 'fixed-hostname-fargate-dev', { env: devEnv });
-// new MyStack(app, 'fixed-hostname-fargate-prod', { env: prodEnv });
+new MyStaticFargate(app, 'fixed-hostname-fargate-dev', { env: janoschEnv });
 
 app.synth();
