@@ -15,18 +15,21 @@ export class MyStaticFargate extends Stack {
     });
 
     const cluster = new ecs.Cluster(this, "MyCluster", {
-      vpc: vpc
+      vpc: vpc,
     });
 
-    new ecs_patterns.NetworkLoadBalancedFargateService(this, "MyFargateService", {
+    const service = new ecs_patterns.NetworkLoadBalancedFargateService(this, "MyFargateService", {
       // domainName: '',
-      cluster: cluster,
-      desiredCount: 1,
-      taskImageOptions: { image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample") },
-      memoryLimitMiB: 512,
-      publicLoadBalancer: true // Default is true
+      cluster,
+      memoryLimitMiB: 1024,
+      cpu: 512,
+      taskImageOptions: {
+        image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+      },
     });
 
+    const port: ec2.Port = new ec2.Port({ protocol: ec2.Protocol.TCP, fromPort: 80, toPort: 80, stringRepresentation: '' });
+    service.service.connections.allowFromAnyIpv4(port);
   }
 }
 
