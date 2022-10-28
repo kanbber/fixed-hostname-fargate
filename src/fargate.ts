@@ -14,6 +14,10 @@ export class MyStaticFargate extends Stack {
       maxAzs: 3
     });
 
+    // const vpce = new ec2.VpcEndpointService(this, 'rds', {
+
+    // });
+
     const cluster = new ecs.Cluster(this, "MyCluster", {
       vpc: vpc,
     });
@@ -26,7 +30,6 @@ export class MyStaticFargate extends Stack {
       image: ecs.ContainerImage.fromAsset(
         path.join(__dirname, 'docker'),
       ),
-      // hostname: 'test',
       portMappings: [{ containerPort: 5000 }]
     });
 
