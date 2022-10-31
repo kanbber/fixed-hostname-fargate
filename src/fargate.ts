@@ -11,7 +11,20 @@ export class MyStaticFargate extends Stack {
     super(scope, id, props);
 
     const vpc = new ec2.Vpc(this, "MyVpc", {
-      maxAzs: 3
+      maxAzs: 3,
+      natGateways: 0,
+      gatewayEndpoints: {
+        S3: {
+          service: ec2.GatewayVpcEndpointAwsService.S3,
+          subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }]
+        }
+      },
+    });
+    vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+    });
+    vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR,
     });
 
     // const vpce = new ec2.VpcEndpointService(this, 'rds', {
